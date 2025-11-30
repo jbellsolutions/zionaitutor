@@ -2,6 +2,21 @@
 
 An AI-powered daily learning assistant with voice interaction for young learners.
 
+## ⚡ Quick Start
+
+**Want to deploy now?** See **[QUICK_START.md](QUICK_START.md)** for 5-minute setup!
+
+**Deploy to Vercel in 1 click:**
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
+
+📖 **Detailed Guides:**
+- **[DEPLOYMENT.md](DEPLOYMENT.md)** - Complete Vercel deployment guide
+- **[VAPI_SETUP.md](VAPI_SETUP.md)** - Voice assistant configuration
+- **[AIRTABLE_SCHEMA.md](AIRTABLE_SCHEMA.md)** - Database setup (optional)
+
+---
+
 ## Features
 
 - ✅ **Voice Chat Widget** - Talk to an AI tutor powered by Vapi
@@ -22,8 +37,8 @@ An AI-powered daily learning assistant with voice interaction for young learners
 - CSS3 with modern gradients and animations
 
 **Backend:**
+- Vercel Serverless Functions
 - Node.js
-- Express
 - AirTable API
 
 **AI/Voice:**
@@ -47,94 +62,70 @@ zionaitutor/
 │   │   └── airtable.js         # AirTable API calls
 │   ├── App.js                  # Main application
 │   ├── index.js                # Entry point
-│   └── styles/                 # CSS files
-├── server/
-│   ├── index.js                # Express server
+│   └── *.css                   # Styling files
+├── api/                        # Vercel Serverless Functions
+│   ├── health.js               # Health check endpoint
+│   ├── tasks/
+│   │   ├── today.js            # Get today's tasks
+│   │   ├── [id].js             # Update task by ID
+│   │   └── check-reset.js      # Check daily reset
+│   └── tools/
+│       ├── mental-math.js      # Mental math generator
+│       ├── search.js           # Educational search
+│       └── update-task.js      # Update task via voice
+├── server/                     # Express server (for local dev)
+│   ├── index.js
 │   └── routes/
-│       ├── tasks.js            # Task management endpoints
-│       └── tools.js            # Vapi function tools
+├── vercel.json                 # Vercel configuration
 ├── .env.example                # Environment variables template
+├── QUICK_START.md              # 5-minute setup guide
+├── DEPLOYMENT.md               # Detailed deployment guide
 ├── AIRTABLE_SCHEMA.md          # Database setup guide
 ├── VAPI_SETUP.md               # Vapi configuration guide
 └── README.md                   # This file
 ```
 
-## Quick Start
+## Deployment
 
-### 1. Clone and Install
+### 🌐 Recommended: Vercel (Easiest!)
+
+**Deploy in 3 steps:**
+
+1. **Push to GitHub**
+   ```bash
+   git push
+   ```
+
+2. **Import to Vercel**
+   - Go to [vercel.com](https://vercel.com)
+   - Import your repository
+   - Click Deploy
+
+3. **Add Environment Variables**
+   - In Vercel dashboard → Settings → Environment Variables
+   - Add: `REACT_APP_VAPI_PUBLIC_KEY`, `REACT_APP_VAPI_ASSISTANT_ID`
+   - Optional: Add AirTable credentials
+
+**Full guide:** See [DEPLOYMENT.md](DEPLOYMENT.md)
+
+### 💻 Local Development
 
 ```bash
-git clone <repository-url>
-cd zionaitutor
+# 1. Install
 npm install
-```
 
-### 2. Set Up Environment Variables
-
-Copy `.env.example` to `.env` and fill in your credentials:
-
-```bash
+# 2. Copy environment file
 cp .env.example .env
+
+# 3. Edit .env with your keys
+
+# 4. Run locally
+npm start
 ```
 
-Edit `.env`:
-
+For backend testing:
 ```bash
-# Vapi Configuration
-VAPI_API_KEY=your_vapi_api_key_here
-VAPI_ASSISTANT_ID=your_vapi_assistant_id_here
-VAPI_PUBLIC_KEY=your_vapi_public_key_here
-
-# AirTable Configuration
-AIRTABLE_API_KEY=your_airtable_api_key_here
-AIRTABLE_BASE_ID=your_airtable_base_id_here
-AIRTABLE_TABLE_NAME=DailyTasks
-
-# Server Configuration
-PORT=3001
-FRONTEND_URL=http://localhost:3000
-```
-
-### 3. Set Up AirTable
-
-Follow the detailed instructions in `AIRTABLE_SCHEMA.md` to:
-1. Create your AirTable base
-2. Add required tables (DailyTasks, MathProgress)
-3. Get your API credentials
-
-### 4. Set Up Vapi Assistant
-
-Follow the detailed instructions in `VAPI_SETUP.md` to:
-1. Create your Vapi account
-2. Configure the assistant with the tutor system prompt
-3. Add function tools (mental math, search, task updates)
-4. Configure voice and transcription settings
-
-### 5. Run the Application
-
-**Development mode (runs both frontend and backend):**
-```bash
-npm run dev
-```
-
-**Or run separately:**
-
-Terminal 1 - Backend:
-```bash
-npm run server
-```
-
-Terminal 2 - Frontend:
-```bash
-npm run client
-```
-
-Visit `http://localhost:3000` in your browser.
-
-### 6. Production Build
-
-```bash
-npm run build
+npm run server  # Run Express server for local API testing
 ```
 
 ## Usage
@@ -298,35 +289,32 @@ curl -X POST http://localhost:3001/api/tools/mental-math \
   -d '{"action":"generate","sessionId":"test","difficulty":"medium","count":5}'
 ```
 
-## Deployment
+## Making Changes
 
-### Backend (Server)
+### ✏️ Super Easy: Edit on GitHub
 
-Deploy to:
-- **Heroku** - Easy Node.js hosting
-- **Railway** - Modern platform
-- **DigitalOcean** - More control
-- **AWS/GCP** - Enterprise
+1. Navigate to file on GitHub
+2. Click pencil icon (Edit)
+3. Make changes
+4. Commit
+5. **Auto-deploys to Vercel!** ⚡
 
-Remember to:
-1. Set environment variables
-2. Use production AirTable base
-3. Update CORS settings
-4. Update Vapi tool URLs
+### 🛠️ Developer Way
 
-### Frontend
-
-Deploy to:
-- **Vercel** - Recommended for React
-- **Netlify** - Great for static sites
-- **GitHub Pages** - Free option
-
-Build first:
 ```bash
-npm run build
+# Edit files locally
+git add .
+git commit -m "Your changes"
+git push
+# Auto-deploys!
 ```
 
-Update `.env` with production backend URL.
+### Common Edits
+
+**Change Daily Tasks:** `api/tasks/today.js` → `getDefaultTasks()`
+**Adjust Math Difficulty:** `api/tools/mental-math.js`
+**Change Colors:** `src/index.css`, `src/components/*.css`
+**Update Tutor Voice:** Vapi dashboard (no code needed!)
 
 ## Security Notes
 
